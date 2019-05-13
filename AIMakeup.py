@@ -10,6 +10,14 @@ import cv2
 import dlib
 import numpy as np
 
+def get_bottom_y(mask):
+    y = mask.shape[0]-1
+    while y >= 0:
+        if np.count_nonzero(mask[y, ...]) > 0:
+            return y+1
+        else: y -= 1
+    return y
+
 class NoFace(Exception):
     '''
     没脸
@@ -234,6 +242,7 @@ class Face(Organ):
     '''
     def __init__(self,im_bgr,img_hsv,temp_bgr,temp_hsv,landmarks,index):
         self.index=index
+        self.img = self.im_bgr
         #五官名称
         self.organs_name=['jaw','mouth','nose','left eye','right eye','left brow','right brow']
         
@@ -257,6 +266,13 @@ class Face(Organ):
         mask_face=self.get_mask_abs()# -mask_organs
         self.patch_mask=self.get_patch(mask_face)
         pass
+
+    def get_lower_face(self, img):
+        bottm_y = get_bottom_y(self.organs['left brow'].get_mask_abs() +
+                    self.organs['right brow'].get_mask_abs())
+        lower_mask = np.zeros(img.shape)
+        lower_mask[bottm_y:, ...] = 1
+        return lower_mask * self.get_mask_abs()
         
     
     def get_forehead_landmark(self,im_bgr,face_landmark,mask_organs,mask_nose):
