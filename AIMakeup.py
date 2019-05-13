@@ -242,7 +242,7 @@ class Face(Organ):
     '''
     def __init__(self,im_bgr,img_hsv,temp_bgr,temp_hsv,landmarks,index):
         self.index=index
-        self.img = self.im_bgr
+        self.img = im_bgr
         #五官名称
         self.organs_name=['jaw','mouth','nose','left eye','right eye','left brow','right brow']
         
@@ -267,10 +267,10 @@ class Face(Organ):
         self.patch_mask=self.get_patch(mask_face)
         pass
 
-    def get_lower_face(self, img):
+    def get_lower_face(self):
         bottm_y = get_bottom_y(self.organs['left brow'].get_mask_abs() +
                     self.organs['right brow'].get_mask_abs())
-        lower_mask = np.zeros(img.shape)
+        lower_mask = np.zeros(self.img.shape)
         lower_mask[bottm_y:, ...] = 1
         return lower_mask * self.get_mask_abs()
         
