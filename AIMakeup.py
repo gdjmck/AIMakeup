@@ -254,7 +254,7 @@ class Face(Organ):
         self.FACE_POINTS = np.concatenate([landmarks,forehead_landmark])
         super(Face,self).__init__(im_bgr,img_hsv,temp_bgr,temp_hsv,self.FACE_POINTS,'face')
 
-        mask_face=self.get_mask_abs()-mask_organs
+        mask_face=self.get_mask_abs()# -mask_organs
         self.patch_mask=self.get_patch(mask_face)
         pass
         
